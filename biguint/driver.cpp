@@ -27,4 +27,9 @@ int main(){
 		myvec[i]->out(std::cout);
 		cout<<" ";
 	}
+	
+	BigUInt newobj("123456"),new2obj(4321);
+	BigUInt myobj = newobj + new2obj;
+	cout<<"addition is: ";myobj.out(cout);
+	myobj = newobj;
 }
