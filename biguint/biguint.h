@@ -6,16 +6,29 @@ using namespace std;
 typedef unsigned int uint;
 class BigUInt{
 	public:
+		//Variables
 		char value[MAXSIZE];
+		//Object constructors
 		BigUInt();
 		BigUInt(int);
 		BigUInt(string);
 		BigUInt(const BigUInt&);
-		void out(ostream&);
+		//Mathematical
 		void add(BigUInt);
+		//Custom comparators
 		static bool less(BigUInt a, BigUInt b);
+		static bool greater(BigUInt a, BigUInt b);
 		static bool less_obj(BigUInt*, BigUInt*);
+		//Overloaded operators
 		BigUInt operator+(BigUInt &);
+		bool operator==(BigUInt &);
+		bool operator>(BigUInt &);
+		bool operator<(BigUInt &);
+		bool operator<=(BigUInt &);
+		bool operator>=(BigUInt &);
+		void operator=(string);
+		//Miscellaneous
+		void out(ostream&);
 };
 
 /*---------------------------*/
@@ -116,26 +129,10 @@ void BigUInt::add(BigUInt b){
 /* Custom Comparators Start */
 /*-------------------------*/
 bool BigUInt::less(BigUInt a, BigUInt b){
-	int i = 0,j = 0;
-	while(a.value[i] != '\0') i++;
-	while(b.value[j] != '\0') j++;
-	if(i > j){
-		return false;
-	}
-	if(j > i){
-		return true;
-	}
-	//both numbers are equal digits long.
-	for(i--;i>=0;i--){
-		if(a.value[i] > b.value[i]){
-			return false;
-		}
-		if(a.value[i] < b.value[i]){
-			return true;
-		}
-	}
-	//both numbers are equal.
-	return true; //for stable sort?
+	return a < b;
+}
+bool BigUInt::greater(BigUInt a, BigUInt b){
+	return a > b;
 }
 bool BigUInt::less_obj(BigUInt *a, BigUInt *b){
 	int i = 0,j = 0;
@@ -173,7 +170,93 @@ BigUInt BigUInt::operator+(BigUInt &b){
 	newobj.add(*this);
 	return newobj;
 }
-
+bool BigUInt::operator==(BigUInt &b){
+	int blen,alen;
+	for(blen = 0; b.value[blen] != '\0'; blen++);
+	blen--;
+	for(alen = 0; this->value[alen] != '\0'; alen++);
+	alen--;
+	
+	if(blen != alen) return false;
+	
+	for(;alen>=0;alen--){
+		if(this->value[alen] != b.value[alen]) return false;
+	}
+	return true;
+}
+bool BigUInt::operator>(BigUInt &b){
+	int blen,alen;
+	for(blen = 0; b.value[blen] != '\0'; blen++);
+	blen--;
+	for(alen = 0; this->value[alen] != '\0'; alen++);
+	alen--;
+	
+	if(blen > alen) return false;
+	if(blen < alen) return true;
+	
+	for(;alen>=0;alen--){
+		if(this->value[alen] > b.value[alen]) return true;
+		if(this->value[alen] < b.value[alen]) return false;
+	}
+	return false;
+}
+bool BigUInt::operator>=(BigUInt &b){
+	int blen,alen;
+	for(blen = 0; b.value[blen] != '\0'; blen++);
+	blen--;
+	for(alen = 0; this->value[alen] != '\0'; alen++);
+	alen--;
+	
+	if(blen > alen) return false;
+	if(blen < alen) return true;
+	
+	for(;alen>=0;alen--){
+		if(this->value[alen] > b.value[alen]) return true;
+		if(this->value[alen] < b.value[alen]) return false;
+	}
+	return true;
+}
+bool BigUInt::operator<(BigUInt &b){
+	int blen,alen;
+	for(blen = 0; b.value[blen] != '\0'; blen++);
+	blen--;
+	for(alen = 0; this->value[alen] != '\0'; alen++);
+	alen--;
+	
+	if(blen < alen) return false;
+	if(blen > alen) return true;
+	
+	for(;alen>=0;alen--){
+		if(this->value[alen] < b.value[alen]) return true;
+		if(this->value[alen] > b.value[alen]) return false;
+	}
+	return false;
+}
+bool BigUInt::operator<=(BigUInt &b){
+	int blen,alen;
+	for(blen = 0; b.value[blen] != '\0'; blen++);
+	blen--;
+	for(alen = 0; this->value[alen] != '\0'; alen++);
+	alen--;
+	
+	if(blen < alen) return false;
+	if(blen > alen) return true;
+	
+	for(;alen>=0;alen--){
+		if(this->value[alen] < b.value[alen]) return true;
+		if(this->value[alen] > b.value[alen]) return false;
+	}
+	return true;
+}
+void BigUInt::operator=(string c){
+	int len;
+	for(len = 0; c[len] != '\0' && len <= MAXSIZE; len++);
+	len--;
+	for(int i = 0, j = len; i <= len; i++, j--){
+		this->value[i] = c[j];
+	}
+	this->value[len+1] = '\0';
+}
 /*----------------------------*/
 /* Overloading Operators End */
 /*--------------------------*/
